@@ -15,7 +15,7 @@ This code has been tested with Python 3.7, torch 1.12.1, CUDA 11.6.
 
 - Clone the repository 
 ```
-git clone git@github.com:fatPeter/mini_splatting.git && cd mini_splatting
+git clone git@github.com:fatPeter/mini-splatting.git && cd mini-splatting
 ```
 - Setup python environment
 ```
