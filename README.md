@@ -1,4 +1,4 @@
-# Mini-Splatting: Representing Scenes with a Constrained Number of Gaussians
+# Mini-Splatting: Representing Scenes with a Constrained Number of Gaussians (ECCV 2024)
 
 This is the official implementation of **Mini-Splatting**, a point cloud analysis work in the context of Gaussian Splatting. Through reorganizing the spatial distribution of 3D Gaussians, our algorithm improves the model performance without any auxiliary information. For technical details, please refer to:
 
