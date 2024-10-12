@@ -16,6 +16,10 @@ def transformPoint4x4(p_orig, projmatrix):
     p_hom = torch.matmul(p_orig, projmatrix[:3])+projmatrix[3:4]
     return p_hom
 
+def transformPoint4x3(p_orig, viewmatrix):
+    p_view = torch.matmul(p_orig, viewmatrix[:3,:3])+viewmatrix[3:4, :3]
+    return p_view
+
 def ndc2Pix(v, S):
     return ((v + 1.0) * S - 1.0) * 0.5
 
@@ -82,18 +86,22 @@ def proj_points(view, gaussians, pipeline, background):
     p_w = 1.0 / (p_hom[:,3] + 0.0000001)
     p_proj = p_hom[:,:3]*p_w[:,None]
 
+    world_view_transform = view_reset.world_view_transform
+    p_view = transformPoint4x3(xyz, world_view_transform)
+    mask = p_view[:,2].cpu().numpy()>0.2
+
     point_image = ndc2Pix(p_proj[:,0], rendering.shape[2]), \
         ndc2Pix(p_proj[:,1], rendering.shape[1])
     
     point_image=torch.cat((point_image[0][:,None], point_image[1][:,None]), -1)
 
-    points = point_image.detach().cpu().numpy()
-    colors = rgb.detach().cpu().numpy()
+    points = point_image.detach().cpu().numpy()[mask]
+    colors = rgb.detach().cpu().numpy()[mask]
 
 
     # tune point size for better visualization 0.3, 0.3, 1.2
     image_proj = draw_points_on_image(points, np.zeros(colors.shape)+[0,0,255], rendering.permute(1,2,0).detach().cpu().numpy(), size=0.3)
-
+    image_proj.save(r'./output.jpg')
 
     return 
 
